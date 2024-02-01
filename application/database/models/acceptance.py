@@ -1,6 +1,6 @@
 from enum import StrEnum
 
-from application.database.models.base import ModelBase
+from application.database.models.base import ModelBase, UpdateModelBase
 
 
 class AcceptanceStatus(StrEnum):
@@ -10,4 +10,8 @@ class AcceptanceStatus(StrEnum):
 
 class Acceptance(ModelBase):
     """Приёмка товара"""
-    status: AcceptanceStatus
+    status: AcceptanceStatus = AcceptanceStatus.in_work
+
+
+class UpdateAcceptance(UpdateModelBase):
+    status: AcceptanceStatus | None = None

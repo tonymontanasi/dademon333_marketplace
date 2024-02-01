@@ -15,7 +15,7 @@ class PostingGood(ModelBase):
 
 
 class UpdatePostingGood(UpdateModelBase):
-    posting_id: UUID
+    posting_id: UUID | None = None
     sku_id: UUID | None = None
     good_id: UUID | None = None
     good_stock: GoodStock | None = None

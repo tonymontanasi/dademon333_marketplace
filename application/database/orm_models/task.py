@@ -7,7 +7,7 @@ class TaskORM(Base):
     __tablename__ = "tasks"
 
     type = Column(VARCHAR, nullable=False)
-    status = Column(VARCHAR, nullable=False)
+    status = Column(VARCHAR, nullable=False, default="in_work", server_default="in_work")
     posting_id = Column(
         UUID,
         ForeignKey("postings.id", onupdate='CASCADE', ondelete='CASCADE'),

@@ -20,7 +20,7 @@ class TaskStatus(StrEnum):
 class Task(ModelBase):
     """Задача на действие с товаром"""
     type: TaskType
-    status: TaskStatus
+    status: TaskStatus = TaskStatus.in_work
     posting_id: UUID | None
     acceptance_id: UUID | None
     good_id: UUID | None
@@ -30,11 +30,11 @@ class Task(ModelBase):
 
 
 class UpdateTask(UpdateModelBase):
-    type: TaskType | None
-    status: TaskStatus | None
-    posting_id: UUID | None
-    acceptance_id: UUID | None
-    good_id: UUID | None
-    sku_id: UUID | None
-    stock: GoodStock | None
-    count: int | None
+    type: TaskType | None = None
+    status: TaskStatus | None = None
+    posting_id: UUID | None = None
+    acceptance_id: UUID | None = None
+    good_id: UUID | None = None
+    sku_id: UUID | None = None
+    stock: GoodStock | None = None
+    count: int | None = None

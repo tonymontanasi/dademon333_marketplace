@@ -13,7 +13,7 @@ class Discount(ModelBase):
     Связь скидки и группы товаров описана в модели DiscountAndSKU.
     """
     percentage: float
-    status: DiscountStatus
+    status: DiscountStatus = DiscountStatus.active
 
 
 class UpdateDiscount(UpdateModelBase):

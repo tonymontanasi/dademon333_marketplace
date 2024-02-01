@@ -10,6 +10,11 @@ class GoodStock(StrEnum):
     not_found = "not_found"
 
 
+class GoodStockWithoutNotFound(StrEnum):
+    valid = "valid"
+    defect = "defect"
+
+
 class Good(ModelBase):
     """Единица товара на складе"""
     sku_id: UUID
@@ -24,4 +29,4 @@ class UpdateGood(UpdateModelBase):
     stock: GoodStock | None = None
     discount_percentage: float | None = None
     is_reserved: bool | None = None
-    is_sold: bool = False
+    is_sold: bool = None

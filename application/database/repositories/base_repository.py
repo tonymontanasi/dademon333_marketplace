@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy import update as update_
@@ -19,24 +20,24 @@ class BaseDbRepository[
 
     @property
     @abstractmethod
-    def _table(self) -> type[Table]:
+    def _model(self) -> type[Model]:
         ...
 
     @property
     @abstractmethod
-    def _model(self) -> type[Model]:
+    def _table(self) -> type[Table]:
         ...
 
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
-    async def get_by_id(self, entry_id: int) -> Model | None:
+    async def get_by_id(self, entry_id: UUID) -> Model | None:
         row = await self.db_session.get(self._table, entry_id)
         if not row:
             return None
         return self._model.from_orm(row)
 
-    async def get_by_ids(self, ids: list[int]) -> list[Model]:
+    async def get_by_ids(self, ids: list[UUID]) -> list[Model]:
         if not ids:
             return []
         result = await self.db_session.scalars(
@@ -49,7 +50,7 @@ class BaseDbRepository[
     async def create(self, model: Model) -> Model:
         result = await self.db_session.scalars(
             insert(self._table)
-            .values(model.dict(exclude_unset=True))
+            .values(model.model_dump())
             .returning(self._table)
         )
         return self._model.from_orm(result.one())
@@ -60,13 +61,13 @@ class BaseDbRepository[
 
         result = await self.db_session.scalars(
             insert(self._table)
-            .values([model.dict(exclude_unset=True) for model in models])
+            .values([x.model_dump() for x in models])
             .returning(self._table)
         )
         return [self._model.from_orm(x) for x in result.all()]
 
     async def update(self, params: UpdateModel) -> None:
-        update_values = params.dict(exclude_unset=True, exclude={"id"})
+        update_values = params.model_dump(exclude_unset=True, exclude={"id"})
         update_values["updated_at"] = datetime.utcnow()
         await self.db_session.execute(
             update_(self._table)
