@@ -36,10 +36,10 @@ async def create_acceptance(
 
 @acceptance_router.get("/getAcceptanceInfo")
 async def get_acceptance_info(
-    id_: UUID = Query(..., alias="id"),
+    acceptance_id: UUID = Query(..., alias="id"),
     use_case: GetAcceptanceInfoUseCase = Depends(
         get_get_acceptance_info_use_case
     ),
 ) -> GetAcceptanceInfoOutputDTO:
     """Получение информации о приёмке"""
-    return await use_case.execute(acceptance_id=id_)
+    return await use_case.execute(acceptance_id=acceptance_id)

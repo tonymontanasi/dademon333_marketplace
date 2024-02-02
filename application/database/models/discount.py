@@ -9,9 +9,7 @@ class DiscountStatus(StrEnum):
 
 
 class Discount(ModelBase):
-    """Скидка (распродажа).
-    Связь скидки и группы товаров описана в модели DiscountAndSKU.
-    """
+    """Акция. Связь акции и группы товаров описана в модели DiscountAndSKU."""
 
     percentage: float
     status: DiscountStatus = DiscountStatus.active
