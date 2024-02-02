@@ -2,7 +2,17 @@ from uuid import UUID
 
 from fastapi import APIRouter, Query, Depends
 
-from application.di.discounts import get_get_discount_use_case
+from application.di.discounts import (
+    get_get_discount_use_case,
+    get_create_discount_use_case,
+)
+from application.use_cases.discounts.create_discount import (
+    CreateDiscountUseCase,
+)
+from application.use_cases.discounts.dto.create_discount import (
+    CreateDiscountInputDTO,
+    CreateDiscountOutputDTO,
+)
 from application.use_cases.discounts.dto.get_discount import (
     GetDiscountOutputDTO,
 )
@@ -18,3 +28,12 @@ async def get_discount(
 ) -> GetDiscountOutputDTO:
     """Получение информации об акции"""
     return await use_case.execute(discount_id)
+
+
+@discount_router.post("/createDiscount")
+async def create_discount(
+    input_dto: CreateDiscountInputDTO,
+    use_case: CreateDiscountUseCase = Depends(get_create_discount_use_case),
+) -> CreateDiscountOutputDTO:
+    """Создание скидки"""
+    return await use_case.execute(input_dto)
