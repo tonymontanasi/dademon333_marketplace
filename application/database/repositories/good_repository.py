@@ -13,7 +13,7 @@ class GoodRepository(BaseDbRepository[Good, UpdateGood, GoodORM]):
 
     async def count_available_by_sku_id(self, sku_id: UUID) -> int:
         rows = await self.db_session.scalars(
-            select(func.count(Good.id).label("available_count")).where(
+            select(func.count(GoodORM.id).label("available_count")).where(
                 and_(
                     GoodORM.sku_id == sku_id,
                     GoodORM.is_reserved.is_(False),
@@ -22,3 +22,14 @@ class GoodRepository(BaseDbRepository[Good, UpdateGood, GoodORM]):
             )
         )
         return rows.one()["available_count"]
+
+    async def get_by_sku_id_with_reserved(self, sku_id: UUID) -> list[Good]:
+        rows = await self.db_session.scalars(
+            select(GoodORM).where(
+                and_(
+                    GoodORM.sku_id == sku_id,
+                    GoodORM.is_sold.is_(False),
+                )
+            )
+        )
+        return [Good.model_validate(x) for x in rows.all()]
