@@ -1,5 +1,13 @@
-from application.database.models.discount import Discount, UpdateDiscount
-from application.database.orm_models import DiscountORM
+from uuid import UUID
+
+from sqlalchemy import select, Join, and_
+
+from application.database.models.discount import (
+    Discount,
+    UpdateDiscount,
+    DiscountStatus,
+)
+from application.database.orm_models import DiscountORM, DiscountAndSKUORM
 from application.database.repositories.base_repository import BaseDbRepository
 
 
@@ -8,3 +16,23 @@ class DiscountRepository(
 ):
     _model = Discount
     _table = DiscountORM
+
+    async def get_actual_by_sku_id(self, sku_id: UUID) -> list[Discount]:
+        rows = await self.db_session.scalars(
+            select(DiscountORM)
+            .select_from(
+                Join(
+                    DiscountAndSKUORM,
+                    DiscountORM,
+                    DiscountAndSKUORM.discount_id == DiscountORM.id,
+                    isouter=True,
+                )
+            )
+            .where(
+                and_(
+                    DiscountAndSKUORM.sku_id == sku_id,
+                    DiscountORM.status == DiscountStatus.active.value,
+                )
+            )
+        )
+        return [Discount.model_validate(x) for x in rows.all()]

@@ -19,7 +19,7 @@ class GetItemInfoUseCase:
         logger.info(f"Получение информации о товаре {good_id}")
 
         good = await self.good_repository.get_by_id(good_id)
-        if not good:
+        if not good or good.is_sold:
             logger.warning("Товар не найден")
             raise GoodNotFound()
         logger.info("Товар найден")
