@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from application.web.views.v1.acceptances import acceptance_router
 from application.web.views.v1.discounts import discount_router
+from application.web.views.v1.goods import good_router
 from application.web.views.v1.sku import sku_router
 
 root_router = APIRouter()
@@ -16,4 +17,8 @@ root_router.include_router(
 root_router.include_router(
     sku_router,
     tags=["SKU"],
+)
+root_router.include_router(
+    good_router,
+    tags=["Goods"],
 )

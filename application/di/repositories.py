@@ -11,6 +11,7 @@ from application.database.repositories.discount_and_sku_repository import (
 from application.database.repositories.discount_repository import (
     DiscountRepository,
 )
+from application.database.repositories.good_repository import GoodRepository
 from application.database.repositories.sku_repository import SKURepository
 from application.database.repositories.task_repository import TaskRepository
 
@@ -25,6 +26,10 @@ async def get_db() -> AsyncSession:
 
 def get_acceptance_repository(db=Depends(get_db)) -> AcceptanceRepository:
     return AcceptanceRepository(db)
+
+
+def get_good_repository(db=Depends(get_db)) -> GoodRepository:
+    return GoodRepository(db)
 
 
 def get_sku_repository(db=Depends(get_db)) -> SKURepository:
