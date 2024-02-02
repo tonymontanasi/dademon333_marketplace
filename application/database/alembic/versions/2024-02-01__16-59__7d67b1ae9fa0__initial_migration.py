@@ -102,7 +102,9 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("percentage", sa.Float(), nullable=False),
-        sa.Column("status", sa.VARCHAR(), nullable=False, server_default="active"),
+        sa.Column(
+            "status", sa.VARCHAR(), nullable=False, server_default="active"
+        ),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -172,7 +174,12 @@ def upgrade() -> None:
             server_default=sa.text("uuid_generate_v4()"),
             nullable=False,
         ),
-        sa.Column("status", sa.VARCHAR(), nullable=False, server_default="in_item_pick"),
+        sa.Column(
+            "status",
+            sa.VARCHAR(),
+            nullable=False,
+            server_default="in_item_pick",
+        ),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -247,7 +254,9 @@ def upgrade() -> None:
             server_default=sa.text("uuid_generate_v4()"),
             nullable=False,
         ),
-        sa.Column("status", sa.VARCHAR(), nullable=False, server_default="in_work"),
+        sa.Column(
+            "status", sa.VARCHAR(), nullable=False, server_default="in_work"
+        ),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -272,13 +281,15 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("type", sa.VARCHAR(), nullable=False),
-        sa.Column("status", sa.VARCHAR(), nullable=False, server_default="in_work"),
+        sa.Column(
+            "status", sa.VARCHAR(), nullable=False, server_default="in_work"
+        ),
+        sa.Column("sku_id", sa.UUID(), nullable=False),
+        sa.Column("stock", sa.VARCHAR(), nullable=False),
+        sa.Column("count", sa.BigInteger(), nullable=False),
         sa.Column("posting_id", sa.UUID(), nullable=True),
         sa.Column("acceptance_id", sa.UUID(), nullable=True),
         sa.Column("good_id", sa.UUID(), nullable=True),
-        sa.Column("sku_id", sa.UUID(), nullable=True),
-        sa.Column("stock", sa.VARCHAR(), nullable=True),
-        sa.Column("count", sa.BigInteger(), nullable=True),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),

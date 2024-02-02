@@ -20,13 +20,11 @@ class BaseDbRepository[
 
     @property
     @abstractmethod
-    def _model(self) -> type[Model]:
-        ...
+    def _model(self) -> type[Model]: ...
 
     @property
     @abstractmethod
-    def _table(self) -> type[Table]:
-        ...
+    def _table(self) -> type[Table]: ...
 
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session

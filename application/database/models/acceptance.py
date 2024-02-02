@@ -10,6 +10,7 @@ class AcceptanceStatus(StrEnum):
 
 class Acceptance(ModelBase):
     """Приёмка товара"""
+
     status: AcceptanceStatus = AcceptanceStatus.in_work
 
 

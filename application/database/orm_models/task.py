@@ -1,4 +1,7 @@
+import uuid
+
 from sqlalchemy import Column, VARCHAR, UUID, ForeignKey, BigInteger
+from sqlalchemy.orm import Mapped
 
 from application.database.orm_models import Base
 
@@ -6,31 +9,33 @@ from application.database.orm_models import Base
 class TaskORM(Base):
     __tablename__ = "tasks"
 
-    type = Column(VARCHAR, nullable=False)
-    status = Column(VARCHAR, nullable=False, default="in_work", server_default="in_work")
-    posting_id = Column(
-        UUID,
-        ForeignKey("postings.id", onupdate='CASCADE', ondelete='CASCADE'),
-        nullable=True,
-        index=True
+    type: Mapped[str] = Column(VARCHAR, nullable=False)
+    status: Mapped[str] = Column(
+        VARCHAR, nullable=False, default="in_work", server_default="in_work"
     )
-    acceptance_id = Column(
+    posting_id: Mapped[uuid.UUID] = Column(
         UUID,
-        ForeignKey("acceptances.id", onupdate='CASCADE', ondelete='CASCADE'),
+        ForeignKey("postings.id", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=True,
-        index=True
+        index=True,
     )
-    good_id = Column(
+    acceptance_id: Mapped[uuid.UUID] = Column(
         UUID,
-        ForeignKey("goods.id", onupdate='CASCADE', ondelete='CASCADE'),
+        ForeignKey("acceptances.id", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=True,
-        index=True
+        index=True,
     )
-    sku_id = Column(
+    good_id: Mapped[uuid.UUID] = Column(
         UUID,
-        ForeignKey("sku.id", onupdate='CASCADE', ondelete='CASCADE'),
+        ForeignKey("goods.id", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=True,
-        index=True
+        index=True,
     )
-    stock = Column(VARCHAR, nullable=True)
-    count = Column(BigInteger, nullable=True)
+    sku_id: Mapped[uuid.UUID] = Column(
+        UUID,
+        ForeignKey("sku.id", onupdate="CASCADE", ondelete="CASCADE"),
+        nullable=True,
+        index=True,
+    )
+    stock: Mapped[str] = Column(VARCHAR, nullable=False)
+    count: Mapped[int] = Column(BigInteger, nullable=False)

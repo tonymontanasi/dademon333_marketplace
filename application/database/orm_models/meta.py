@@ -13,10 +13,15 @@ class Base(DeclarativeBase):
         server_default=text("uuid_generate_v4()"),
     )
     created_at: Mapped[datetime] = Column(
-        DateTime(timezone=True), nullable=False, default=datetime.utcnow,
-        server_default=func.now()
+        DateTime(timezone=True),
+        nullable=False,
+        default=datetime.utcnow,
+        server_default=func.now(),
     )
     updated_at: Mapped[datetime] = Column(
-        DateTime(timezone=True), nullable=False, default=datetime.utcnow,
-        server_default=func.now(), onupdate=func.now()
+        DateTime(timezone=True),
+        nullable=False,
+        default=datetime.utcnow,
+        server_default=func.now(),
+        onupdate=func.now(),
     )

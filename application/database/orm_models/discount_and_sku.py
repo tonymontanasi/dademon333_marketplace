@@ -9,13 +9,13 @@ class DiscountAndSKUORM(Base):
 
     discount_id: Mapped[UUID] = Column(
         UUID,
-        ForeignKey('discounts.id', onupdate='CASCADE', ondelete='CASCADE'),
+        ForeignKey("discounts.id", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=False,
-        index=True
+        index=True,
     )
     sku_id: Mapped[UUID] = Column(
         UUID,
-        ForeignKey('sku.id', onupdate='CASCADE', ondelete='CASCADE'),
+        ForeignKey("sku.id", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=False,
-        index=True
+        index=True,
     )

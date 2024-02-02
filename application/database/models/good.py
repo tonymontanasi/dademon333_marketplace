@@ -17,6 +17,7 @@ class GoodStockWithoutNotFound(StrEnum):
 
 class Good(ModelBase):
     """Единица товара на складе"""
+
     sku_id: UUID
     stock: GoodStock
     discount_percentage: float = 0.0

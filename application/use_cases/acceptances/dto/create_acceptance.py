@@ -12,7 +12,9 @@ class CreateAcceptanceItemInputDTO(BaseModel):
 
 
 class CreateAcceptanceInputDTO(BaseModel):
-    items_to_accept: list[CreateAcceptanceItemInputDTO]
+    items_to_accept: list[CreateAcceptanceItemInputDTO] = Field(
+        ..., min_length=1
+    )
 
 
 class CreateAcceptanceOutputDTO(BaseModel):

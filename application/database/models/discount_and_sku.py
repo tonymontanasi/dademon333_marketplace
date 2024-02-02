@@ -5,6 +5,7 @@ from application.database.models.base import ModelBase
 
 class DiscountAndSKU(ModelBase):
     """Связь многие-ко-многим между скидкой (распродажей) и группой товаров."""
+
     discount_id: UUID
     sku_id: UUID
 

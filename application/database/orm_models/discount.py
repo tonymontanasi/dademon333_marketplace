@@ -8,4 +8,6 @@ class DiscountORM(Base):
     __tablename__ = "discounts"
 
     percentage: Mapped[float] = Column(Float, nullable=False)
-    status: Mapped[str] = Column(VARCHAR, nullable=False, default="active", server_default="active")
+    status: Mapped[str] = Column(
+        VARCHAR, nullable=False, default="active", server_default="active"
+    )

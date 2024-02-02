@@ -18,5 +18,5 @@ __all__ = (
     "PostingORM",
     "PostingGoodORM",
     "SKUORM",
-    "TaskORM"
+    "TaskORM",
 )

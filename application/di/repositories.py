@@ -2,8 +2,9 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from application.database.connection import async_session
-from application.database.repositories.acceptance_repository import \
-    AcceptanceRepository
+from application.database.repositories.acceptance_repository import (
+    AcceptanceRepository,
+)
 from application.database.repositories.sku_repository import SKURepository
 from application.database.repositories.task_repository import TaskRepository
 

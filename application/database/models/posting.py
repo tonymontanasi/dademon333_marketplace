@@ -11,6 +11,7 @@ class PostingStatus(StrEnum):
 
 class Posting(ModelBase):
     """Заказ клиента"""
+
     status: PostingStatus = PostingStatus.in_item_pick
 
 

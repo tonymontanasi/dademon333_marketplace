@@ -6,6 +6,7 @@ from application.database.models.good import GoodStock
 
 class PostingGood(ModelBase):
     """Товар в заказе клиента"""
+
     posting_id: UUID
     sku_id: UUID
     good_id: UUID
