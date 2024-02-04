@@ -6,7 +6,6 @@ from application.database.models.good import GoodStock
 
 
 class TaskType(StrEnum):
-    acceptance = "acceptance"  # Приёмка товара
     picking = "picking"  # Сборку товара
     placing = "placing"  # Размещение товара на складе
 

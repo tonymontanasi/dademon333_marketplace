@@ -35,7 +35,7 @@ def upgrade() -> None:
             "base_price", sa.Float(), server_default="0.0", nullable=False
         ),
         sa.Column(
-            "is_hidden", sa.VARCHAR(), server_default="t", nullable=False
+            "is_hidden", sa.Boolean(), server_default="t", nullable=False
         ),
         sa.Column(
             "created_at",
@@ -69,9 +69,9 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column(
-            "is_reserved", sa.VARCHAR(), server_default="f", nullable=False
+            "is_reserved", sa.Boolean(), server_default="f", nullable=False
         ),
-        sa.Column("is_sold", sa.VARCHAR(), server_default="f", nullable=False),
+        sa.Column("is_sold", sa.Boolean(), server_default="f", nullable=False),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -204,11 +204,12 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("posting_id", sa.UUID(), nullable=False),
+        sa.Column("sku_id", sa.UUID(), nullable=False),
         sa.Column("good_id", sa.UUID(), nullable=False),
         sa.Column("good_stock", sa.VARCHAR(), nullable=False),
         sa.Column("cost", sa.Float(), nullable=False),
         sa.Column(
-            "is_canceled", sa.VARCHAR(), server_default="f", nullable=False
+            "is_canceled", sa.Boolean(), server_default="f", nullable=False
         ),
         sa.Column(
             "created_at",
@@ -223,6 +224,9 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
+            ["sku_id"], ["sku.id"], onupdate="CASCADE", ondelete="CASCADE"
+        ),
+        sa.ForeignKeyConstraint(
             ["good_id"], ["goods.id"], onupdate="CASCADE", ondelete="CASCADE"
         ),
         sa.ForeignKeyConstraint(
@@ -232,6 +236,12 @@ def upgrade() -> None:
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_index(
+        op.f("ix_posting_goods_sku_id"),
+        "posting_goods",
+        ["sku_id"],
+        unique=False,
     )
     op.create_index(
         op.f("ix_posting_goods_good_id"),

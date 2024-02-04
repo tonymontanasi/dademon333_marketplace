@@ -12,6 +12,12 @@ from application.database.repositories.discount_repository import (
     DiscountRepository,
 )
 from application.database.repositories.good_repository import GoodRepository
+from application.database.repositories.posting_good_repository import (
+    PostingGoodRepository,
+)
+from application.database.repositories.posting_repository import (
+    PostingRepository,
+)
 from application.database.repositories.sku_repository import SKURepository
 from application.database.repositories.task_repository import TaskRepository
 
@@ -48,3 +54,13 @@ def get_discount_and_sku_repository(
     db=Depends(get_db),
 ) -> DiscountAndSKURepository:
     return DiscountAndSKURepository(db)
+
+
+def get_posting_repository(db=Depends(get_db)) -> PostingRepository:
+    return PostingRepository(db)
+
+
+def get_posting_good_repository(
+    db=Depends(get_db),
+) -> PostingGoodRepository:
+    return PostingGoodRepository(db)
