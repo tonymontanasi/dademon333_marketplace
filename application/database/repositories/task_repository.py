@@ -16,3 +16,9 @@ class TaskRepository(BaseDbRepository[Task, UpdateTask, TaskORM]):
             select(TaskORM).where(TaskORM.acceptance_id == acceptance_id)
         )
         return [Task.model_validate(x) for x in result.all()]
+
+    async def get_by_posting_id(self, posting_id: UUID) -> list[Task]:
+        result = await self.db_session.scalars(
+            select(TaskORM).where(TaskORM.posting_id == posting_id)
+        )
+        return [Task.model_validate(x) for x in result.all()]

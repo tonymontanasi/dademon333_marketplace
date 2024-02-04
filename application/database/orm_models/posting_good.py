@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, UUID, ForeignKey, VARCHAR, Float, Boolean
+from sqlalchemy import Column, UUID, ForeignKey, VARCHAR, Float
 from sqlalchemy.orm import Mapped
 
 from application.database.orm_models import Base
@@ -29,6 +29,4 @@ class PostingGoodORM(Base):
     )
     good_stock: Mapped[str] = Column(VARCHAR, nullable=False)
     cost: Mapped[float] = Column(Float, nullable=False)
-    is_canceled: Mapped[bool] = Column(
-        Boolean, nullable=False, default=False, server_default="f"
-    )
+    cancel_reason: Mapped[str] = Column(VARCHAR, nullable=True)

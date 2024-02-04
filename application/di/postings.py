@@ -9,6 +9,7 @@ from application.di.repositories import (
     get_posting_good_repository,
 )
 from application.use_cases.postings.create_posting import CreatePostingUseCase
+from application.use_cases.postings.get_posting import GetPostingUseCase
 
 
 def get_create_posting_use_case(
@@ -24,6 +25,18 @@ def get_create_posting_use_case(
         good_repository=good_repository,
         task_repository=task_repository,
         discount_repository=discount_repository,
+        posting_repository=posting_repository,
+        posting_good_repository=posting_good_repository,
+    )
+
+
+def get_get_posting_use_case(
+    task_repository=Depends(get_task_repository),
+    posting_repository=Depends(get_posting_repository),
+    posting_good_repository=Depends(get_posting_good_repository),
+) -> GetPostingUseCase:
+    return GetPostingUseCase(
+        task_repository=task_repository,
         posting_repository=posting_repository,
         posting_good_repository=posting_good_repository,
     )

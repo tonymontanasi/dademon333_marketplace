@@ -208,9 +208,7 @@ def upgrade() -> None:
         sa.Column("good_id", sa.UUID(), nullable=False),
         sa.Column("good_stock", sa.VARCHAR(), nullable=False),
         sa.Column("cost", sa.Float(), nullable=False),
-        sa.Column(
-            "is_canceled", sa.Boolean(), server_default="f", nullable=False
-        ),
+        sa.Column("cancel_reason", sa.VARCHAR(), nullable=True),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
