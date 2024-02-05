@@ -4,7 +4,6 @@ from uuid import UUID
 from application.database.models.good import Good, GoodStock, UpdateGood
 from application.database.models.posting import Posting
 from application.database.models.posting_good import PostingGood
-from application.database.models.sku import SKU
 from application.database.models.task import Task, TaskType
 from application.database.repositories.discount_repository import (
     DiscountRepository,
@@ -26,6 +25,7 @@ from application.use_cases.postings.dto.create_posting import (
 )
 from application.use_cases.postings.exceptions import InvalidGoodSKU
 from application.use_cases.sku.exceptions import SKUNotFound
+from application.utils.cost import get_good_cost
 
 logger = logging.getLogger(__name__)
 
@@ -72,8 +72,10 @@ class CreatePostingUseCase:
             raise SKUNotFound()
         logger.info(f"SKU {item.id} доступна для покупки")
 
-        max_discount = await self.get_max_sku_discount(sku)
-        logger.info(f"Максимальная скидка к товару: {max_discount}")
+        sku_discount = await self.discount_repository.get_max_sku_discount(
+            sku_id=sku.id
+        )
+        logger.info(f"Максимальная скидка к товару: {sku_discount}")
 
         valid_goods = await self.good_repository.get_by_ids(
             item.from_valid_ids
@@ -98,14 +100,14 @@ class CreatePostingUseCase:
             goods=valid_goods,
             posting_id=posting_id,
             sku_base_price=sku.base_price,
-            max_discount=max_discount,
+            sku_discount=sku_discount,
         )
         logger.info("Добавили валидные товары в заказ")
         await self.process_goods(
             goods=defect_goods,
             posting_id=posting_id,
             sku_base_price=sku.base_price,
-            max_discount=max_discount,
+            sku_discount=sku_discount,
         )
         logger.info("Добавили дефектные товары в заказ")
 
@@ -114,20 +116,20 @@ class CreatePostingUseCase:
         goods: list[Good],
         posting_id: UUID,
         sku_base_price: float,
-        max_discount: float,
+        sku_discount: float,
     ):
         for good in goods:
-            if good.stock == GoodStock.valid:
-                good_discount = max_discount
-            else:
-                good_discount = max(max_discount, good.discount_percentage)
-
-            cost = sku_base_price * (1 - good_discount / 100)
-
             await self.good_repository.update(
                 UpdateGood(id=good.id, is_reserved=True)
             )
             logger.info(f"Зарезервировали товар {good.id}")
+
+            cost = get_good_cost(
+                sku_base_price=sku_base_price,
+                sku_discount=sku_discount,
+                good=good,
+            )
+            logger.info(f"Цена на товар {good.id}: {cost}")
 
             posting_good = await self.posting_good_repository.create(
                 PostingGood(
@@ -152,14 +154,6 @@ class CreatePostingUseCase:
             )
             logger.info(f"Создали задачу на сборку {task.id}")
 
-    async def get_max_sku_discount(self, sku: SKU) -> float:
-        discounts = await self.discount_repository.get_actual_by_sku_id(sku.id)
-        logger.info(f"Найдено {len(discounts)} активных скидок")
-        if not discounts:
-            return 0
-
-        return max([x.percentage for x in discounts])
-
     @staticmethod
     def validate_goods(
         goods: list[Good],
@@ -180,18 +174,16 @@ class CreatePostingUseCase:
                     f" не соответствует SKU {good.sku_id}"
                 )
                 raise InvalidGoodSKU()
-            if good.is_sold:
-                logger.info(f"Товар {good.id} уже продан")
-                raise GoodNotFound()
-            if good.is_reserved:
-                logger.info(f"Товар {good.id} уже зарезервирован")
-                raise GoodNotFound()
-            if good.stock == GoodStock.not_found:
-                logger.info(f"Товар {good.id} утерян")
-                raise GoodNotFound()
             if good.stock != expected_stock:
                 logger.info(
                     f"У товара {good.id} указан неверный stock: {good.stock},"
                     f" ожидался {expected_stock}"
                 )
+                raise GoodNotFound()
+            if (
+                good.is_sold
+                or good.is_reserved
+                or good.stock == GoodStock.not_found
+            ):
+                logger.warning("Товар или не найден, или продан, или утерян")
                 raise GoodNotFound()

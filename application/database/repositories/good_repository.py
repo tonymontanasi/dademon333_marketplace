@@ -2,7 +2,7 @@ from uuid import UUID
 
 from sqlalchemy import select, func, and_
 
-from application.database.models.good import Good, UpdateGood
+from application.database.models.good import Good, UpdateGood, GoodStock
 from application.database.orm_models import GoodORM
 from application.database.repositories.base_repository import BaseDbRepository
 
@@ -33,3 +33,23 @@ class GoodRepository(BaseDbRepository[Good, UpdateGood, GoodORM]):
             )
         )
         return [Good.model_validate(x) for x in rows.all()]
+
+    async def pick_available_by_sku(
+        self, sku_id: UUID, stock: GoodStock
+    ) -> Good | None:
+        row = await self.db_session.scalars(
+            select(GoodORM)
+            .where(
+                and_(
+                    GoodORM.sku_id == sku_id,
+                    GoodORM.stock == stock,
+                    GoodORM.is_reserved.is_(False),
+                    GoodORM.is_sold.is_(False),
+                )
+            )
+            .limit(1)
+        )
+        result = row.one_or_none()
+        if not result:
+            return None
+        return Good.model_validate(result)

@@ -36,3 +36,9 @@ class DiscountRepository(
             )
         )
         return [Discount.model_validate(x) for x in rows.all()]
+
+    async def get_max_sku_discount(self, sku_id: UUID) -> float:
+        discounts = await self.get_actual_by_sku_id(sku_id)
+        if not discounts:
+            return 0
+        return max([x.percentage for x in discounts])

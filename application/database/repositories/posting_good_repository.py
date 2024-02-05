@@ -1,10 +1,11 @@
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, update, and_
 
 from application.database.models.posting_good import (
     PostingGood,
     UpdatePostingGood,
+    PostingGoodCancelReason,
 )
 from application.database.orm_models import PostingGoodORM
 from application.database.repositories.base_repository import BaseDbRepository
@@ -23,3 +24,20 @@ class PostingGoodRepository(
             )
         )
         return [PostingGood.model_validate(x) for x in rows.all()]
+
+    async def remove_from_posting(
+        self,
+        good_id: UUID,
+        posting_id: UUID,
+        cancel_reason: PostingGoodCancelReason,
+    ) -> None:
+        await self.db_session.execute(
+            update(PostingGoodORM)
+            .where(
+                and_(
+                    PostingGoodORM.good_id == good_id,
+                    PostingGoodORM.posting_id == posting_id,
+                )
+            )
+            .values(cancel_reason=cancel_reason.value)
+        )
