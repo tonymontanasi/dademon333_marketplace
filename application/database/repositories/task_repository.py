@@ -1,8 +1,8 @@
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 
-from application.database.models.task import Task, UpdateTask
+from application.database.models.task import Task, UpdateTask, TaskStatus
 from application.database.orm_models import TaskORM
 from application.database.repositories.base_repository import BaseDbRepository
 
@@ -22,3 +22,12 @@ class TaskRepository(BaseDbRepository[Task, UpdateTask, TaskORM]):
             select(TaskORM).where(TaskORM.posting_id == posting_id)
         )
         return [Task.model_validate(x) for x in result.all()]
+
+    async def update_status_by_ids(
+        self, ids: list[UUID], status: TaskStatus
+    ) -> None:
+        await self.db_session.execute(
+            update(TaskORM)
+            .where(TaskORM.id.in_(ids))
+            .values(status=status.value)
+        )

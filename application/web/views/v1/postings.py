@@ -1,12 +1,17 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Response, status
 
 from application.di.postings import (
     get_create_posting_use_case,
     get_get_posting_use_case,
+    get_cancel_posting_use_case,
 )
+from application.use_cases.postings.cancel_posting import CancelPostingUseCase
 from application.use_cases.postings.create_posting import CreatePostingUseCase
+from application.use_cases.postings.dto.cancel_posting import (
+    CancelPostingInputDTO,
+)
 from application.use_cases.postings.dto.create_posting import (
     CreatePostingInputDTO,
     CreatePostingOutputDTO,
@@ -33,3 +38,13 @@ async def create_posting(
 ) -> CreatePostingOutputDTO:
     """Создание заказа"""
     return await use_case.execute(input_dto)
+
+
+@posting_router.post("/cancelPosting")
+async def cancel_posting(
+    input_dto: CancelPostingInputDTO,
+    use_case: CancelPostingUseCase = Depends(get_cancel_posting_use_case),
+):
+    """Отмена заказа"""
+    await use_case.execute(input_dto)
+    return Response(status_code=status.HTTP_200_OK)

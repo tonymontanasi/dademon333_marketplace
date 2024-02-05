@@ -8,6 +8,7 @@ from application.di.repositories import (
     get_posting_repository,
     get_posting_good_repository,
 )
+from application.use_cases.postings.cancel_posting import CancelPostingUseCase
 from application.use_cases.postings.create_posting import CreatePostingUseCase
 from application.use_cases.postings.get_posting import GetPostingUseCase
 
@@ -36,6 +37,20 @@ def get_get_posting_use_case(
     posting_good_repository=Depends(get_posting_good_repository),
 ) -> GetPostingUseCase:
     return GetPostingUseCase(
+        task_repository=task_repository,
+        posting_repository=posting_repository,
+        posting_good_repository=posting_good_repository,
+    )
+
+
+def get_cancel_posting_use_case(
+    good_repository=Depends(get_good_repository),
+    task_repository=Depends(get_task_repository),
+    posting_repository=Depends(get_posting_repository),
+    posting_good_repository=Depends(get_posting_good_repository),
+) -> CancelPostingUseCase:
+    return CancelPostingUseCase(
+        good_repository=good_repository,
         task_repository=task_repository,
         posting_repository=posting_repository,
         posting_good_repository=posting_good_repository,
