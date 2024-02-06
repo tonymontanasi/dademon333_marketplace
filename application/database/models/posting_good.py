@@ -10,6 +10,7 @@ class PostingGoodCancelReason(StrEnum):
 
     not_found = "not_found"  # Товар утерян
     discounted = "discounted"  # Товар уценён
+    task_canceled = "task_canceled"  # Задача на сборку отменена
 
 
 class PostingGood(ModelBase):

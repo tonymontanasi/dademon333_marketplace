@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import select, func, and_
+from sqlalchemy import select, func, and_, update
 
 from application.database.models.good import Good, UpdateGood, GoodStock
 from application.database.orm_models import GoodORM
@@ -53,3 +53,10 @@ class GoodRepository(BaseDbRepository[Good, UpdateGood, GoodORM]):
         if not result:
             return None
         return Good.model_validate(result)
+
+    async def sell_goods(self, good_ids: list[UUID]) -> None:
+        await self.db_session.execute(
+            update(GoodORM)
+            .where(GoodORM.id.in_(good_ids))
+            .values(is_sold=True, is_reserved=False)
+        )

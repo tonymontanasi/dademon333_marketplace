@@ -70,3 +70,5 @@ class TryPickNewGoodUseCase:
             )
         )
         logger.info("Создали новую picking-задачу")
+
+        return new_good
