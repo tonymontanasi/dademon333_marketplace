@@ -17,7 +17,7 @@ class GetItemInfoBySKUIdUseCase:
     async def execute(self, sku_id: UUID) -> GetItemInfoBySKUIdOutputDTO:
         logger.info(f"Получение информации о товарах по SKU {sku_id}")
 
-        goods = await self.good_repository.get_by_sku_id_with_reserved(sku_id)
+        goods = await self.good_repository.get_by_sku_id(sku_id)
         logger.info(f"Найдено {len(goods)} товаров")
 
         return GetItemInfoBySKUIdOutputDTO(

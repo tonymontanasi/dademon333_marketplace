@@ -36,9 +36,7 @@ class GetSKUInfoUseCase:
         actual_price = await self.get_actual_price(sku)
         logger.info(f"Текущая цена: {actual_price}")
 
-        available_count = await self.good_repository.count_available_by_sku_id(
-            sku_id
-        )
+        available_count = await self.good_repository.count_by_sku_id(sku_id)
         logger.info(f"На складе находится {available_count} единиц товара")
 
         return GetSKUInfoOutputDTO(

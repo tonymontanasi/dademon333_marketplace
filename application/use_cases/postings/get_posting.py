@@ -69,7 +69,9 @@ class GetPostingUseCase:
                 if good.cancel_reason == PostingGoodCancelReason.not_found
             ],
             task_ids=[
-                GetPostingTaskOutputDTO(id=task.id, status=task.status)
+                GetPostingTaskOutputDTO(
+                    id=task.id, status=task.status, type=task.type
+                )
                 for task in tasks
             ],
         )

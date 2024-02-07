@@ -4,7 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 from application.database.models.posting import PostingStatus
-from application.database.models.task import TaskStatus
+from application.database.models.task import TaskStatus, TaskType
 
 
 class GetPostingGoodOutputDTO(BaseModel):
@@ -16,6 +16,7 @@ class GetPostingGoodOutputDTO(BaseModel):
 class GetPostingTaskOutputDTO(BaseModel):
     id: UUID
     status: TaskStatus
+    type: TaskType
 
 
 class GetPostingOutputDTO(BaseModel):
