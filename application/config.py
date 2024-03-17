@@ -26,7 +26,7 @@ POSTGRESQL_USER = os.getenv("POSTGRESQL_USER", "postgres")
 POSTGRESQL_HOST = os.getenv("POSTGRESQL_HOST", "127.0.0.1")
 POSTGRESQL_PORT = os.getenv("POSTGRESQL_PORT", "5432")
 POSTGRESQL_PASSWORD = os.getenv("POSTGRESQL_PASSWORD", "postgres")
-POSTGRESQL_DATABASE = os.getenv("POSTGRESQL_DATABASE", "trade_hub")
+POSTGRESQL_DATABASE = os.getenv("POSTGRESQL_DATABASE", "marketplace")
 
 IS_PYTEST = "pytest" in sys.argv[0] or "PYTEST_XDIST_WORKER" in os.environ
 IS_DEBUG: bool = os.getenv("IS_DEBUG", "True") == "True"
