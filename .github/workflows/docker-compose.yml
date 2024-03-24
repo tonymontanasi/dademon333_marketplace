@@ -30,6 +30,10 @@ jobs:
         export POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}
         docker-compose -f docker-compose.yaml up -d
 
+    - name: Get container logs if unhealthy
+      if: failure()
+      run: docker-compose logs
+
     - name: Run App
       run: |
         echo "Container is up and app is running"
