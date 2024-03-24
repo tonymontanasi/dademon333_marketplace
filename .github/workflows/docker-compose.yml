@@ -22,16 +22,14 @@ jobs:
 
     - name: Build and run with docker compose
       run: |
+        docker-compose build
         export POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}
         export POSTGRESQL_HOST=${{ secrets.POSTGRESQL_HOST }}
         export POSTGRESQL_PORT=${{ secrets.POSTGRESQL_PORT }}
         export POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}
         export POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}
-
         docker-compose -f docker-compose.yaml up -d
 
     - name: Run App
       run: |
-        alembic upgrade head
-        uvicorn main:app --host 0.0.0.0 --port 8080
         echo "Container is up and app is running"
